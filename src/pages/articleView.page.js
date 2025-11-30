@@ -9,7 +9,7 @@ export class ArticleViewPage {
         this.articleBody = page.locator('.article-content p');
         this.tagList = page.locator('.tag-list');
         this.tagItems = page.locator('.tag-list li');
-        // Автор статьи в баннере (не автор комментария внизу)
+        // Автор статьи в баннере
         this.author = page.locator('.banner .article-meta .author');
         // Кнопка удаления статьи в баннере
         this.deleteArticleButton = page.locator('.banner').getByRole('button', { name: 'Delete Article' });

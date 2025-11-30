@@ -1,12 +1,9 @@
 export class MainPage {
-    // техническое описание страницы
-
     constructor(page) {
         this.page = page;
         this.signupLink = page.getByRole('link', { name: 'Sign up' }).describe('Кнопка//cсылка зарегистрироваться');
         this.loginLink = page.getByRole('link', { name: 'Login' }).describe('Кнопка//cсылка авторизоваться');
     }
-    // бизнесовые действия со страницей
 
     /*
     * Переход на страницу регистрации
