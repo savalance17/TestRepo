@@ -6,26 +6,41 @@ import { ArticleCreatePage } from '../src/pages/articleCreate.page';
 import { HomePage } from '../src/pages/home.page';
 import { ArticleViewPage } from '../src/pages/articleView.page';
 
-test.describe('Домашнее задание. Система контроля версий Git: основы', () => {
+test.describe('Домашнее задание', () => {
     const user = {
         email: users.testUserEmail,
         password: users.testUserPassword,
         name: users.testUserName,
-    }
+    };
 
     const url = 'https://realworld.qa.guru/';
 
-    test('Создание новой статьи', async ({ page }) => {
-        const homePage = new HomePage(page);
-        const articleCreatePage = new ArticleCreatePage(page);
-        const articleViewPage = new ArticleViewPage(page);
-        let title = faker.lorem.sentence();
-        let description = faker.lorem.paragraph();
-        let body = faker.lorem.paragraphs(3);
+    // Переменные для данных теста
+    let homePage;
+    let articleCreatePage;
+    let articleViewPage;
+    let title;
+    let description;
+    let body;
+    let tags;
 
+    test.beforeEach(async ({ page }) => {
         // Авторизуемся
         await login(page, url, user.email, user.password, user.name);
 
+        // Создаем экземпляры страниц
+        homePage = new HomePage(page);
+        articleCreatePage = new ArticleCreatePage(page);
+        articleViewPage = new ArticleViewPage(page);
+
+        // Генерируем уникальные данные для каждого теста
+        title = faker.lorem.sentence();
+        description = faker.lorem.paragraph();
+        body = faker.lorem.paragraphs(3);
+        tags = Array.from({ length: 3 }, () => faker.lorem.word());
+    })
+
+    test('Создание новой статьи без тегов', async ({ page }) => {
         // Переходим на страницу создания статьи
         await homePage.clickArticleCreateLink();
 
@@ -37,17 +52,6 @@ test.describe('Домашнее задание. Система контроля 
     })
 
     test('Создание новой статьи с указанием тегов', async ({ page }) => {
-        const homePage = new HomePage(page);
-        const articleCreatePage = new ArticleCreatePage(page);
-        const articleViewPage = new ArticleViewPage(page);
-        let title = faker.lorem.sentence();
-        let description = faker.lorem.paragraph();
-        let body = faker.lorem.paragraphs(3);
-        let tags = Array.from({ length: 3 }, () => faker.lorem.word());
-
-        // Авторизуемся
-        await login(page, url, user.email, user.password, user.name);
-
         // Переходим на страницу создания статьи
         await homePage.clickArticleCreateLink();
 
@@ -59,17 +63,6 @@ test.describe('Домашнее задание. Система контроля 
     })
 
     test('Проверка заполненных полей статьи при создании', async ({ page }) => {
-        const homePage = new HomePage(page);
-        const articleCreatePage = new ArticleCreatePage(page);
-        const articleViewPage = new ArticleViewPage(page);
-        let title = faker.lorem.sentence();
-        let description = faker.lorem.paragraph();
-        let body = faker.lorem.paragraphs(3);
-        let tags = Array.from({ length: 3 }, () => faker.lorem.word());
-
-        // Авторизуемся
-        await login(page, url, user.email, user.password, user.name);
-
         // Переходим на страницу создания статьи
         await homePage.clickArticleCreateLink();
 
@@ -81,17 +74,6 @@ test.describe('Домашнее задание. Система контроля 
     })
 
     test('Проверка содержимого созданной статьи при просмотре', async ({ page }) => {
-        const homePage = new HomePage(page);
-        const articleCreatePage = new ArticleCreatePage(page);
-        const articleViewPage = new ArticleViewPage(page);
-        let title = faker.lorem.sentence();
-        let description = faker.lorem.paragraph();
-        let body = faker.lorem.paragraphs(3);
-        let tags = Array.from({ length: 3 }, () => faker.lorem.word());
-
-        // Авторизуемся
-        await login(page, url, user.email, user.password, user.name);
-
         // Переходим на страницу создания статьи
         await homePage.clickArticleCreateLink();
 
@@ -103,17 +85,7 @@ test.describe('Домашнее задание. Система контроля 
     })
 
     test('Добавление комментария к статье', async ({ page }) => {
-        const homePage = new HomePage(page);
-        const articleCreatePage = new ArticleCreatePage(page);
-        const articleViewPage = new ArticleViewPage(page);
-        let title = faker.lorem.sentence();
-        let description = faker.lorem.paragraph();
-        let body = faker.lorem.paragraphs(3);
-        let tags = Array.from({ length: 3 }, () => faker.lorem.word());
-        let comment = faker.lorem.sentence();
-
-        // Авторизуемся
-        await login(page, url, user.email, user.password, user.name);
+        const comment = faker.lorem.sentence();
 
         // Переходим на страницу создания статьи
         await homePage.clickArticleCreateLink();
@@ -132,19 +104,8 @@ test.describe('Домашнее задание. Система контроля 
     })
 
     test('Множественное добавление комментариев к статье', async ({ page }) => {
-        const homePage = new HomePage(page);
-        const articleCreatePage = new ArticleCreatePage(page);
-        const articleViewPage = new ArticleViewPage(page);
-        let title = faker.lorem.sentence();
-        let description = faker.lorem.paragraph();
-        let body = faker.lorem.paragraphs(3);
-        let tags = Array.from({ length: 3 }, () => faker.lorem.word());
-        
         // Создаем массив из 3 комментариев
-        let comments = Array.from({ length: 3 }, () => faker.lorem.sentence());
-
-        // Авторизуемся
-        await login(page, url, user.email, user.password, user.name);
+        const comments = Array.from({ length: 3 }, () => faker.lorem.sentence());
 
         // Переходим на страницу создания статьи
         await homePage.clickArticleCreateLink();
@@ -155,13 +116,10 @@ test.describe('Домашнее задание. Система контроля 
         // Проверяем, что статья создана
         await articleViewPage.checkArticleIsOpenedByTitle(title);
 
-        // Добавляем 3 комментария к статье
+        // Добавляем комментарии к статье
         for (let i = 0; i < comments.length; i++) {
             console.log(`Добавляем комментарий ${i + 1} из ${comments.length}`);
             await articleViewPage.addComment(comments[i]);
-            
-            // Проверяем, что комментарий добавлен
-            await articleViewPage.checkComment(comments[i], true, user.name);
         }
 
         // Проверяем, что все комментарии присутствуют на странице
