@@ -3,7 +3,6 @@ import { faker } from '@faker-js/faker';
 import { users } from '../fixtures/users';
 import { login } from '../src/utils/utils';
 import { ArticleCreatePage } from '../src/pages/articleCreate.page';
-import { HomePage } from '../src/pages/home.page';
 import { ArticleViewPage } from '../src/pages/articleView.page';
 import { MainPage } from '../src/pages/main.page';
 
@@ -15,7 +14,6 @@ test.describe('Домашнее задание', () => {
     };
 
     // Переменные для данных теста
-    let homePage;
     let articleCreatePage;
     let articleViewPage;
     let mainPage;
@@ -29,7 +27,6 @@ test.describe('Домашнее задание', () => {
         await login(page, user.email, user.password, user.name);
 
         // Создаем экземпляры страниц
-        homePage = new HomePage(page);
         articleCreatePage = new ArticleCreatePage(page);
         articleViewPage = new ArticleViewPage(page);
         mainPage = new MainPage(page);
@@ -43,7 +40,7 @@ test.describe('Домашнее задание', () => {
 
     test('Создание новой статьи без тегов', async () => {
         // Переходим на страницу создания статьи
-        await homePage.clickArticleCreateLink();
+        await mainPage.clickArticleCreateLink();
 
         // Заполняем поля статьи
         await articleCreatePage.createAndPublishArticle(title, description, body);
@@ -55,7 +52,7 @@ test.describe('Домашнее задание', () => {
 
     test('Создание новой статьи с указанием тегов', async () => {
         // Переходим на страницу создания статьи
-        await homePage.clickArticleCreateLink();
+        await mainPage.clickArticleCreateLink();
 
         // Заполняем поля статьи
         await articleCreatePage.createAndPublishArticle(title, description, body, tags);
@@ -67,7 +64,7 @@ test.describe('Домашнее задание', () => {
 
     test('Проверяем что созданная статья отображается в "Global Feed"', async ({ page }) => {
         // Переходим на страницу создания статьи
-        await homePage.clickArticleCreateLink();
+        await mainPage.clickArticleCreateLink();
 
         // Заполняем все поля при создании статьи
         await articleCreatePage.createAndPublishArticle(title, description, body, tags);
@@ -89,7 +86,7 @@ test.describe('Домашнее задание', () => {
 
     test('Проверка содержимого созданной статьи при просмотре', async () => {
         // Переходим на страницу создания статьи
-        await homePage.clickArticleCreateLink();
+        await mainPage.clickArticleCreateLink();
 
         // Создаем новую статью
         await articleCreatePage.createAndPublishArticle(title, description, body, tags);
@@ -118,7 +115,7 @@ test.describe('Домашнее задание', () => {
         const comment = faker.lorem.sentence();
 
         // Переходим на страницу создания статьи
-        await homePage.clickArticleCreateLink();
+        await mainPage.clickArticleCreateLink();
 
         // Создаем новую статью
         await articleCreatePage.createAndPublishArticle(title, description, body, tags);
@@ -144,7 +141,7 @@ test.describe('Домашнее задание', () => {
         const comments = Array.from({ length: 3 }, () => faker.lorem.sentence());
 
         // Переходим на страницу создания статьи
-        await homePage.clickArticleCreateLink();
+        await mainPage.clickArticleCreateLink();
 
         // Создаем новую статью
         await articleCreatePage.createAndPublishArticle(title, description, body, tags);
