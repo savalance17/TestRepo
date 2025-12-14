@@ -1,5 +1,3 @@
-import { expect } from '@playwright/test';
-
 // Домашняя страница
 export class HomePage {
     // техническое описание страницы
@@ -11,19 +9,23 @@ export class HomePage {
         this.articleCreateLink = page.getByRole('link', { name: 'New Article' });
     }
     
-    // бизнесовые действия со страницей
-
+    /**
+     * Получение локатора имени пользователя
+     * @returns {Locator} Локатор имени пользователя
+     */
     getProfileNameLocator() {
         return this.profileName;
     }
 
-    /*
-    * Проверка авторизации
-    */
-    async checkUserName(userName) {
-        console.log('Проверяем имя авторизованного пользователя');
-        // Проверяем, что пользователь авторизован
-        await expect(this.getProfileNameLocator()).toContainText(userName);
+    /**
+     * Получение имени авторизованного пользователя
+     * @returns {Promise<string>} Имя пользователя
+     */
+    async getUserName() {
+        console.log('Получаем имя авторизованного пользователя');
+        await this.profileName.waitFor({ state: 'visible' });
+        const userName = await this.profileName.textContent();
+        return userName ? userName.trim() : '';
     }
 
     /**
@@ -31,7 +33,7 @@ export class HomePage {
      */
     async clickArticleCreateLink() {
         console.log('Кликаем по ссылке "New Article"');
-        await expect(this.articleCreateLink).toBeVisible();
+        await this.articleCreateLink.waitFor({ state: 'visible' });
         await this.articleCreateLink.click();
         await this.page.waitForLoadState('domcontentloaded');
     }
