@@ -1,7 +1,6 @@
 import { expect } from '@playwright/test';
 import { MainPage } from '../pages/main.page';
 import { AutorizationPage } from '../pages/autorization.page';
-import { HomePage } from '../pages/home.page';
 
 /**
  * Авторизация пользователя
@@ -12,7 +11,6 @@ import { HomePage } from '../pages/home.page';
 export async function login(page, email, password, userName) {
     const mainPage = new MainPage(page);
     const autorizationPage = new AutorizationPage(page);
-    const homePage = new HomePage(page);
 
     // Открываем главную страницу
     await mainPage.openMainPage();
@@ -24,6 +22,6 @@ export async function login(page, email, password, userName) {
     await autorizationPage.autorization(email, password);
 
     // Проверяем, что пользователь авторизован
-    const actualUserName = await homePage.getUserName();
+    const actualUserName = await mainPage.getUserName();
     expect(actualUserName).toContain(userName);
 }

@@ -14,6 +14,8 @@ export class MainPage {
         // Локаторы для пагинации
         this.nextPageButton = page.getByRole('button', { name: 'Next page' });
         this.pagination = page.locator('.pagination');
+        this.profileName = page.locator('.dropdown-toggle');
+        this.articleCreateLink = page.getByRole('link', { name: 'New Article' });
     }
 
     /*
@@ -177,6 +179,35 @@ export class MainPage {
         
         console.log(`Статья с заголовком "${articleTitle}" не найдена в Global Feed (проверено ${currentPage} страниц)`);
         return null;
+    }
+
+    /**
+     * Получение локатора имени пользователя
+     * @returns {Locator} Локатор имени пользователя
+     */
+    getProfileNameLocator() {
+        return this.profileName;
+    }
+
+    /**
+     * Получение имени авторизованного пользователя
+     * @returns {Promise<string>} Имя пользователя
+     */
+    async getUserName() {
+        console.log('Получаем имя авторизованного пользователя');
+        await this.profileName.waitFor({ state: 'visible' });
+        const userName = await this.profileName.textContent();
+        return userName ? userName.trim() : '';
+    }
+
+    /**
+     * Кликаем по ссылке "New Article"
+     */
+    async clickArticleCreateLink() {
+        console.log('Кликаем по ссылке "New Article"');
+        await this.articleCreateLink.waitFor({ state: 'visible' });
+        await this.articleCreateLink.click();
+        await this.page.waitForLoadState('domcontentloaded');
     }
 
 }
