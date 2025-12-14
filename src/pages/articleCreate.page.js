@@ -1,5 +1,3 @@
-import { expect } from '@playwright/test';
-
 export class ArticleCreatePage {
     // техническое описание страницы
     
@@ -55,29 +53,18 @@ export class ArticleCreatePage {
         // Заполняем Заголовок статьи
         await this.titleInput.fill(title);
         console.log('Заполняем поле "Article Title"');
-        await expect(this.titleInput).toHaveValue(title);
 
         // Заполняем Описание статьи
         console.log('Заполняем поле "What\'s this article about?"');
         await this.descriptionInput.fill(description);
-        await expect(this.descriptionInput).toHaveValue(description);
 
         // Заполняем Содержание статьи
         console.log('Заполняем поле "Write your article (in markdown)"');
         await this.bodyInput.fill(body);
-        await expect(this.bodyInput).toHaveValue(body);
 
         // Заполняем Теги статьи
         if (tags) {
             await this.fillTags(tags);
-            // Проверяем теги: после заполнения они сохраняются через запятую
-            const tagsArray = Array.isArray(tags) ? tags : tags.split(' ').filter(tag => tag.trim() !== '');
-            const actualTagsValue = await this.tagInput.inputValue();
-            
-            // Проверяем, что каждый тег присутствует в поле
-            for (const tag of tagsArray) {
-                expect(actualTagsValue).toContain(tag.trim());
-            }
         }
     }
 
@@ -110,44 +97,4 @@ export class ArticleCreatePage {
         await this.page.waitForLoadState('domcontentloaded');
     }
 
-    /**
-     * Проверка заполненных полей статьи
-     * @param {string} expectedTitle - Ожидаемый заголовок статьи
-     * @param {string} expectedDescription - Ожидаемое описание статьи
-     * @param {string} expectedBody - Ожидаемое содержание статьи
-     * @param {string|string[]} expectedTags - Ожидаемые теги статьи (строка с тегами через пробел или массив тегов)
-     */
-    async checkFilledFields(expectedTitle, expectedDescription, expectedBody, expectedTags) {
-        console.log('Проверяем заполненные поля статьи');
-
-        // Проверяем заголовок
-        if (expectedTitle) {
-            console.log(`Проверяем заголовок: "${expectedTitle}"`);
-            await expect(this.titleInput).toHaveValue(expectedTitle);
-        }
-
-        // Проверяем описание
-        if (expectedDescription) {
-            console.log(`Проверяем описание: "${expectedDescription}"`);
-            await expect(this.descriptionInput).toHaveValue(expectedDescription);
-        }
-
-        // Проверяем содержание
-        if (expectedBody) {
-            console.log('Проверяем содержание статьи');
-            await expect(this.bodyInput).toHaveValue(expectedBody);
-        }
-
-        // Проверяем теги
-        if (expectedTags) {
-            console.log('Проверяем теги статьи');
-            const tagsArray = Array.isArray(expectedTags) ? expectedTags : expectedTags.split(' ').filter(tag => tag.trim() !== '');
-            const actualTagsValue = await this.tagInput.inputValue();
-            
-            // Проверяем, что каждый тег присутствует в поле
-            for (const tag of tagsArray) {
-                expect(actualTagsValue).toContain(tag.trim());
-            }
-        }
-    }
 }

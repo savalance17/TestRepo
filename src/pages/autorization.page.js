@@ -1,4 +1,3 @@
-import { expect } from '@playwright/test';
 export class AutorizationPage {
 
     // техническое описание страницы
@@ -14,13 +13,12 @@ export class AutorizationPage {
     // бизнесовые действия со страницей
 
    /**
-    * Проверка, что страница авторизации открыта
-    * и что есть ссылка на страницу регистрации
+    * Ожидание загрузки страницы авторизации
     */
-   async isPageOpened() {
-    console.log('Проверяем, что страница авторизации открыта');
-    await expect(this.pageTitle).toBeVisible();
-    await expect(this.needAnAccountLink).toBeVisible();
+   async waitForPageLoad() {
+    console.log('Ожидаем загрузку страницы авторизации');
+    await this.pageTitle.waitFor({ state: 'visible' });
+    await this.needAnAccountLink.waitFor({ state: 'visible' });
    }
 
     /**
@@ -29,29 +27,28 @@ export class AutorizationPage {
     */
     async fillEmail(email) {
         console.log('Заполняем поле Email');
-        await expect(this.emailInput).toBeVisible();
+        await this.emailInput.waitFor({ state: 'visible' });
         await this.emailInput.click();
         await this.emailInput.fill(email);
     }
 
     /**
-     * Заполнение поля Email
-     * @param {string} email - Email пользователя
+     * Заполнение поля Password
+     * @param {string} password - Пароль пользователя
     */
     async fillPassword(password) {
         console.log('Заполняем поле Пароль');
-        await expect(this.passwordInput).toBeVisible();
+        await this.passwordInput.waitFor({ state: 'visible' });
         await this.passwordInput.click();
         await this.passwordInput.fill(password);
     }
 
     /**
-     * Заполнение поля Email
-     * @param {string} email - Email пользователя
+     * Нажатие кнопки Login
     */
     async clickLoginButton() {
         console.log('Нажимаем кнопку Авторизоваться');
-        await expect(this.loginButton).toBeVisible();
+        await this.loginButton.waitFor({ state: 'visible' });
         await this.loginButton.click();
     }
 
@@ -61,7 +58,7 @@ export class AutorizationPage {
      * @param {string} password - Пароль пользователя
      */
     async autorization(email, password) {
-        await this.isPageOpened();
+        await this.waitForPageLoad();
         await this.fillEmail(email);
         await this.fillPassword(password);
         await this.clickLoginButton();
